@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2017 Google Inc.
+ * Copyright 2017 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -83,5 +83,6 @@ fireauth.storage.Storage.Type = {
   LOCAL_STORAGE: 'localStorage',
   MOCK_STORAGE: 'mockStorage',
   NULL_STORAGE: 'nullStorage',
-  SESSION_STORAGE: 'sessionStorage'
+  SESSION_STORAGE: 'sessionStorage',
+  CUSTOM_STORAGE: 'customStorage'
 };

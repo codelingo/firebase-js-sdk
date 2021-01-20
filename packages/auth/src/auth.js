@@ -251,6 +251,21 @@ fireauth.Auth.prototype.setPersistence = function(persistence) {
   return /** @type {!goog.Promise<void>} */ (this.registerPendingPromise_(p));
 };
 
+/**
+ * Changes the Auth state persistence to the specified one.
+ * @param {!fireauth.authStorage.Persistence} persistence The Auth state
+ *     persistence mechanism.
+ * @return {!goog.Promise<void>}
+ */
+fireauth.Auth.prototype.setPersistenceCustom = function(storage) {
+  // TODO: fix auth.delete() behavior and how this affects persistence
+  // change after deletion.
+  // Throw an error if already destroyed.
+  // Set current persistence.
+  var p = this.userStorageManager_.setPersistenceCustom(storage);
+  return /** @type {!goog.Promise<void>} */ (this.registerPendingPromise_(p));
+};
+
 
 /**
  * Get rid of Closure warning - the property is adding in the constructor.

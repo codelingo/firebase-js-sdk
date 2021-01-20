@@ -71,7 +71,9 @@ fireauth.authStorage.Persistence = {
   NONE: 'none',
   // State will only persist in current session/tab, relevant to web only, and
   // will be cleared when the tab is closed.
-  SESSION: 'session'
+  SESSION: 'session',
+  // State supplied by external user.
+  CUSTOM: 'custom'
 };
 
 
@@ -105,8 +107,8 @@ fireauth.authStorage.validatePersistenceArgument =
       }
       break;
     case fireauth.util.Env.NODE:
-      // Only none is supported in Node.js.
-      if (arg !== fireauth.authStorage.Persistence.NONE) {
+      // Only none and custom type is supported in Node.js.
+      if (arg !== fireauth.authStorage.Persistence.NONE || arg !== fireauth.authStorage.CUSTOM) {
         throw unsupportedTypeError;
       }
       break;

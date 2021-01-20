@@ -348,6 +348,53 @@ fireauth.storage.UserManager.prototype.setPersistence = function(persistence) {
   });
 };
 
+/**
+ * Sets the persistence to the custom storage type.
+ * If an existing user already is in storage, it copies that value to the new
+ * storage and clears all the others.
+ * @param {!fireauth.authStorage.Storage} storage The storage
+ *     persistence implementation to switch to.
+ * @return {!goog.Promise} A promise that resolves when persistence change is
+ *     applied.
+ */
+fireauth.storage.UserManager.prototype.setPersistenceCustom = function(storage) {
+  var currentUser = null;
+  var self = this;
+  var persistence = "customStorage"
+  // Validate the persistence type provided. This will throw a synchronous error
+  // if invalid.
+  // fireauth.authStorage.validatePersistenceArgument(persistence);
+  // Wait for turn in queue.
+  return this.waitForReady_(function() {
+    // If persistence hasn't changed, do nothing.
+    if (persistence != self.currentAuthUserKey_.persistent) {
+      // Persistence changed. Copy from current storage to new one.
+      return self.manager_.get(
+        /** @type {!fireauth.authStorage.Key} */ (self.currentAuthUserKey_),
+        self.appId_).then(function(result) {
+        // Save current user.
+        currentUser = result;
+        // Clear from current storage.
+        return self.removeAllExcept_(persistence);
+      }).then(function() {
+        // Update persistence key to the new one.
+        self.currentAuthUserKey_ =
+            fireauth.storage.UserManager.getAuthUserKey_(persistence);
+        // Copy current storage type to the new one.
+        if (currentUser) {
+          return self.manager_.set(
+              /** @type {!fireauth.authStorage.Key} */ (
+                  self.currentAuthUserKey_),
+              currentUser,
+              self.appId_);
+        }
+      });
+    }
+    // No change in persistence type.
+    return goog.Promise.resolve();
+  });
+};
+
 
 /**
  * Saves the current persistence type so it can be retrieved after a page
